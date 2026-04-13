@@ -1,30 +1,29 @@
-# organizador-estudos
-Projeto de Bootcamp II realizado por Renato Moreira Santos Faria- Organizador de estudos para alunos com dificuldade de rotina.
-
 # 🎓 Gestor de Estudos Acadêmicos Pro
-Sistema desenvolvido para o Bootcamp II de Engenharia de Software.
+
+Projeto desenvolvido para o Bootcamp II de Engenharia de Software por **Renato Moreira Santos Faria**. O objetivo é oferecer uma ferramenta prática para alunos que possuem dificuldade em organizar sua rotina de estudos.
+
+---
 
 ## 🚀 Funcionalidades
-- Cadastro de matérias com carga horária.
-- Persistência de dados em SQLite (os dados não somem ao fechar).
-- Controle de status (Pendente/Concluído).
-- Interface moderna com Treeview.
+- **Cadastro de matérias:** Adicione disciplinas com suas respectivas cargas horárias.
+- **Persistência de dados:** Utiliza SQLite para garantir que seus dados fiquem salvos mesmo após fechar o app.
+- **Gestão de Status:** Controle o progresso marcando matérias como "Pendente" ou "Concluído".
+- **Interface Moderna:** Visual organizado utilizando o componente Treeview do Tkinter.
 
 ## 🛠️ Qualidade e CI/CD
-- **Linting:** Analisado com Flake8 (Padrão PEP8).
-- **Testes:** Validações unitárias com Pytest.
-- **CI:** GitHub Actions configurado para automação de builds.
+Para garantir um código limpo e funcional, o projeto conta com:
+- **Linting:** Analisado com **Flake8** seguindo o padrão PEP8.
+- [cite_start]**Testes:** Validações unitárias automatizadas com **Pytest**. [cite: 35, 48]
+- [cite_start]**CI (Integração Contínua):** **GitHub Actions** configurado para validar cada commit automaticamente. [cite: 50, 63]
 
-## 📦 Como rodar
-1. `pip install -r requirements.txt`
-2. `python src/app.py`
+---
 
-## 🛠️ Como Executar o Projeto
+## 📦 Como Executar o Projeto
 
-Para rodar esta aplicação localmente, siga os passos abaixo:
+Siga os passos abaixo para rodar a aplicação em sua máquina:
 
 ### 1. Clonar o Repositório
-Abra o seu terminal e digite:
+Abra o terminal e execute:
 ```bash
 git clone [https://github.com/renasrenas2/organizador-estudos.git](https://github.com/renasrenas2/organizador-estudos.git)
 cd organizador-estudos
