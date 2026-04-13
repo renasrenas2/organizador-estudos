@@ -18,3 +18,13 @@ Sistema desenvolvido para o Bootcamp II de Engenharia de Software.
 ## 📦 Como rodar
 1. `pip install -r requirements.txt`
 2. `python src/app.py`
+
+## 🛠️ Como Executar o Projeto
+
+Para rodar esta aplicação localmente, siga os passos abaixo:
+
+### 1. Clonar o Repositório
+Abra o seu terminal e digite:
+```bash
+git clone [https://github.com/renasrenas2/organizador-estudos.git](https://github.com/renasrenas2/organizador-estudos.git)
+cd organizador-estudos
