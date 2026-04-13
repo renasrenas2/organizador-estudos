@@ -27,21 +27,10 @@ Tenha o **Python 3.10 ou superior** instalado em seu sistema.
 
 ### 2. Clonar e Instalar
 Abra o terminal e execute os comandos abaixo:
-
+```bash
 # Clonar o repositório
 git clone [https://github.com/renasrenas2/organizador-estudos.git](https://github.com/renasrenas2/organizador-estudos.git)
 cd organizador-estudos
 
 # Instalar dependências de teste e qualidade
 pip install -r requirements.txt
-3. Execução
-Para abrir a interface do gestor, execute:
-
-
-python src/app.py
-
-🧪 Como rodar os testes
-Para validar a integridade do código localmente, use:
-
-pytest
-
