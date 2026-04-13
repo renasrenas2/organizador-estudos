@@ -34,3 +34,13 @@ cd organizador-estudos
 
 # Instalar dependências de teste e qualidade
 pip install -r requirements.txt
+```
+### 3. Execução
+Para abrir a interface do gestor, execute:
+```bash
+python src/app.py
+```
+### Como rodar os testes
+Para validar a integridade do código localmente, use:
+```bash
+pytest
