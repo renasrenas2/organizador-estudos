@@ -1,5 +1,5 @@
 # organizador-estudos
-Projeto de Bootcamp II - Organizador de estudos para alunos com dificuldade de rotina.
+Projeto de Bootcamp II realizado por Renato Moreira Santos Faria- Organizador de estudos para alunos com dificuldade de rotina.
 
 # 🎓 Gestor de Estudos Acadêmicos Pro
 Sistema desenvolvido para o Bootcamp II de Engenharia de Software.
