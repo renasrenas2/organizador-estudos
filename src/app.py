@@ -1,45 +1,64 @@
-import tkinter as tk
-from tkinter import messagebox
+import streamlit as st
+import sqlite3
+import requests
 
+# --- Configuração da API Pública ---
+def buscar_conselho():
+    try:
+        response = requests.get("https://api.adviceslip.com/advice", timeout=5)
+        if response.status_code == 200:
+            return response.json()['slip']['advice']
+        return "Estude com foco e persistência!"
+    except:
+        return "Conexão com API falhou, mas não pare de estudar!"
 
-class OrganizadorEstudos:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Organizador de Estudos v1.0.0")
-        self.root.geometry("400x400")
+# --- Lógica de Banco de Dados ---
+def criar_banco():
+    conn = sqlite3.connect("estudos.db", check_same_thread=False)
+    c = conn.cursor()
+    c.execute("""CREATE TABLE IF NOT EXISTS tarefas
+                 (id INTEGER PRIMARY KEY, materia TEXT, horas TEXT, status TEXT)""")
+    conn.commit()
+    return conn
 
-        # Elementos da Interface
-        self.label_titulo = tk.Label(
-            root, text="Meu Cronograma de Foco",
-            font=("Arial", 14, "bold")
-        )
-        self.label_titulo.pack(pady=10)
+conn = criar_banco()
 
-        self.entry_materia = tk.Entry(root, width=30)
-        self.entry_materia.insert(0, "Digite a matéria...")
-        self.entry_materia.pack(pady=5)
+# --- Interface Web com Streamlit ---
+st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
 
-        self.btn_adicionar = tk.Button(
-            root, text="Adicionar Tarefa",
-            command=self.adicionar_tarefa
-        )
-        self.btn_adicionar.pack(pady=5)
+st.title("🎓 Gestor de Estudos Acadêmicos")
+st.subheader("Sua dose diária de motivação:")
+st.info(buscar_conselho()) # Exibe o dado da API Pública 
 
-        self.lista_tarefas = tk.Listbox(root, width=50, height=10)
-        self.lista_tarefas.pack(pady=10)
+# Formuário de Entrada
+with st.form("nova_materia"):
+    col1, col2 = st.columns([3, 1])
+    materia = col1.text_input("Nome da Matéria")
+    horas = col2.text_input("Horas")
+    submit = st.form_submit_button("Adicionar à Rotina")
 
-    def adicionar_tarefa(self):
-        materia = self.entry_materia.get()
-        if materia and materia != "Digite a matéria...":
-            self.lista_tarefas.insert(tk.END, f"📚 {materia}")
-            self.entry_materia.delete(0, tk.END)
-        else:
-            messagebox.showwarning(
-                "Atenção", "Por favor, digite o nome de uma matéria."
-            )
+if submit and materia and horas:
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO tarefas (materia, horas, status) VALUES (?,?,?)",
+        (materia, horas, "Pendente")
+    )
+    conn.commit()
+    st.success(f"{materia} adicionada!")
 
+# Exibição da Tabela
+st.write("---")
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM tarefas")
+tarefas = cursor.fetchall()
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = OrganizadorEstudos(root)
-    root.mainloop()
+for t in tarefas:
+    col_id, col_mat, col_hr, col_st, col_btn = st.columns([1, 4, 2, 3, 2])
+    col_id.write(f"#{t[0]}")
+    col_mat.write(t[1])
+    col_hr.write(f"{t[2]}h")
+    col_st.write(t[3])
+    if col_btn.button("Excluir", key=f"del_{t[0]}"):
+        cursor.execute("DELETE FROM tarefas WHERE id = ?", (t[0],))
+        conn.commit()
+        st.rerun()
