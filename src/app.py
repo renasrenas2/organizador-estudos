@@ -1,9 +1,8 @@
 import sqlite3
-import streamlit as st
 import requests
+import streamlit as st
 
 
-# --- Configuração da API Pública ---
 def buscar_conselho():
     try:
         response = requests.get("https://api.adviceslip.com/advice", timeout=5)
@@ -14,7 +13,6 @@ def buscar_conselho():
         return "Conexão com API falhou, mas não pare de estudar!"
 
 
-# --- Lógica de Banco de Dados ---
 def criar_banco():
     conn = sqlite3.connect("estudos.db", check_same_thread=False)
     c = conn.cursor()
@@ -25,7 +23,7 @@ def criar_banco():
     return conn
 
 
-# --- Inicialização ---
+# --- Início da Aplicação (2 linhas vazias acima deste comentário) ---
 conn = criar_banco()
 
 st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
@@ -33,7 +31,7 @@ st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
 st.title("🎓 Gestor de Estudos Acadêmicos")
 st.subheader("Sua dose diária de motivação:")
 
-# Aqui usamos o requests através da função buscar_conselho
+# Exibe o conselho da API
 st.info(buscar_conselho())
 
 # Formulário de Entrada
