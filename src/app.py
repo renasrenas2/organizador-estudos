@@ -1,6 +1,7 @@
-import streamlit as st
 import sqlite3
+import streamlit as st
 import requests
+
 
 # --- Configuração da API Pública ---
 def buscar_conselho():
@@ -9,28 +10,33 @@ def buscar_conselho():
         if response.status_code == 200:
             return response.json()['slip']['advice']
         return "Estude com foco e persistência!"
-    except:
+    except Exception:
         return "Conexão com API falhou, mas não pare de estudar!"
+
 
 # --- Lógica de Banco de Dados ---
 def criar_banco():
     conn = sqlite3.connect("estudos.db", check_same_thread=False)
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS tarefas
-                 (id INTEGER PRIMARY KEY, materia TEXT, horas TEXT, status TEXT)""")
+                 (id INTEGER PRIMARY KEY, materia TEXT,
+                 horas TEXT, status TEXT)""")
     conn.commit()
     return conn
 
+
+# --- Inicialização ---
 conn = criar_banco()
 
-# --- Interface Web com Streamlit ---
 st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
 
 st.title("🎓 Gestor de Estudos Acadêmicos")
 st.subheader("Sua dose diária de motivação:")
-st.info(buscar_conselho()) # Exibe o dado da API Pública 
 
-# Formuário de Entrada
+# Aqui usamos o requests através da função buscar_conselho
+st.info(buscar_conselho())
+
+# Formulário de Entrada
 with st.form("nova_materia"):
     col1, col2 = st.columns([3, 1])
     materia = col1.text_input("Nome da Matéria")
