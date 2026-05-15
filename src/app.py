@@ -3,6 +3,7 @@ import requests
 import streamlit as st
 
 
+
 def buscar_conselho():
     try:
         response = requests.get("https://api.adviceslip.com/advice", timeout=5)
@@ -11,6 +12,7 @@ def buscar_conselho():
         return "Estude com foco e persistência!"
     except Exception:
         return "Conexão com API falhou, mas não pare de estudar!"
+
 
 
 def criar_banco():
@@ -23,7 +25,8 @@ def criar_banco():
     return conn
 
 
-# --- Início da Aplicação (2 linhas vazias acima deste comentário) ---
+
+# --- Início da Aplicação ---
 conn = criar_banco()
 
 st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
