@@ -1,5 +1,8 @@
 # 🎓 Gestor de Estudos Acadêmicos Pro
 
+## 🌐 Deploy
+https://renasrenas2.github.io/organizador-estudos/
+
 **Versão:** 2.0.0  
 **Autor:** Renato Moreira Santos Faria  
 **Repositório Público:** [https://github.com/renasrenas2/organizador-estudos](https://github.com/renasrenas2/organizador-estudos)
