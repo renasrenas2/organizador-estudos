@@ -3,10 +3,12 @@ import requests
 import streamlit as st
 
 
-
 def buscar_conselho():
+    """Busca um conselho motivacional da API pública."""
     try:
-        response = requests.get("https://api.adviceslip.com/advice", timeout=5)
+        response = requests.get(
+            "https://api.adviceslip.com/advice", timeout=5
+        )
         if response.status_code == 200:
             return response.json()['slip']['advice']
         return "Estude com foco e persistência!"
@@ -14,16 +16,17 @@ def buscar_conselho():
         return "Conexão com API falhou, mas não pare de estudar!"
 
 
-
 def criar_banco():
+    """Cria e retorna conexão com o banco SQLite."""
     conn = sqlite3.connect("estudos.db", check_same_thread=False)
     c = conn.cursor()
-    c.execute("""CREATE TABLE IF NOT EXISTS tarefas
-                 (id INTEGER PRIMARY KEY, materia TEXT,
-                 horas TEXT, status TEXT)""")
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS tarefas
+           (id INTEGER PRIMARY KEY, materia TEXT,
+           horas TEXT, status TEXT)"""
+    )
     conn.commit()
     return conn
-
 
 
 # --- Início da Aplicação ---
@@ -34,10 +37,8 @@ st.set_page_config(page_title="Gestor de Estudos Pro v2.0", layout="centered")
 st.title("🎓 Gestor de Estudos Acadêmicos")
 st.subheader("Sua dose diária de motivação:")
 
-# Exibe o conselho da API
 st.info(buscar_conselho())
 
-# Formulário de Entrada
 with st.form("nova_materia"):
     col1, col2 = st.columns([3, 1])
     materia = col1.text_input("Nome da Matéria")
@@ -53,7 +54,6 @@ if submit and materia and horas:
     conn.commit()
     st.success(f"{materia} adicionada!")
 
-# Exibição da Tabela
 st.write("---")
 cursor = conn.cursor()
 cursor.execute("SELECT * FROM tarefas")
