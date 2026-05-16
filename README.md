@@ -7,7 +7,7 @@
 ## 🚀 Aplicação Online (Deploy)
 
 > **Acesse a aplicação publicada aqui:**
-> **[🔗 https://organizador-estudos.streamlit.app](https://organizador-estudos.streamlit.app)**
+> **[🔗 https://organizador-estudos-ykblpr2sylxzo4kmjpquin.streamlit.app](https://organizador-estudos-ykblpr2sylxzo4kmjpquin.streamlit.app)**
 
 ---
 
