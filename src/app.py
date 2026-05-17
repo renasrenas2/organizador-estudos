@@ -1,19 +1,28 @@
 import tkinter as tk
 from tkinter import messagebox
+from clima import obter_clima, mensagem_clima
 
 
 class OrganizadorEstudos:
     def __init__(self, root):
         self.root = root
-        self.root.title("Organizador de Estudos v1.0.0")
-        self.root.geometry("400x400")
+        self.root.title("Organizador de Estudos v2.0.0")
+        self.root.geometry("400x480")
 
-        # Elementos da Interface
+        # Título
         self.label_titulo = tk.Label(
             root, text="Meu Cronograma de Foco",
             font=("Arial", 14, "bold")
         )
         self.label_titulo.pack(pady=10)
+
+        # Label do clima
+        self.label_clima = tk.Label(
+            root, text="🌤️ Carregando clima...",
+            font=("Arial", 10), fg="gray"
+        )
+        self.label_clima.pack(pady=2)
+        self.root.after(100, self.atualizar_clima)
 
         self.entry_materia = tk.Entry(root, width=30)
         self.entry_materia.insert(0, "Digite a matéria...")
@@ -27,6 +36,10 @@ class OrganizadorEstudos:
 
         self.lista_tarefas = tk.Listbox(root, width=50, height=10)
         self.lista_tarefas.pack(pady=10)
+
+    def atualizar_clima(self):
+        msg = mensagem_clima()
+        self.label_clima.config(text=msg, fg="blue")
 
     def adicionar_tarefa(self):
         materia = self.entry_materia.get()
