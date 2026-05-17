@@ -1,3 +1,6 @@
+## 🌐 Deploy
+https://renasrenas2.github.io/organizador-estudos/
+
 # 🎓 Gestor de Estudos Acadêmicos Pro
 
 **Versão:** 2.0.0
