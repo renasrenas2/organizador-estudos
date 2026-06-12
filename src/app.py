@@ -1,58 +1,108 @@
-import tkinter as tk
-from tkinter import messagebox
-from clima import obter_clima, mensagem_clima
+import requests
+import streamlit as st
+
+SUPABASE_URL = "https://kxjoanonjuedsrsxucqp.supabase.co"
+SUPABASE_KEY = "sb_publishable_sdQNr6YsH3hqWL_7LHk5NQ_6NyH-Q8o"
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json",
+}
 
 
-class OrganizadorEstudos:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Organizador de Estudos v2.0.0")
-        self.root.geometry("400x480")
-
-        # Título
-        self.label_titulo = tk.Label(
-            root, text="Meu Cronograma de Foco",
-            font=("Arial", 14, "bold")
+def buscar_conselho():
+    """Busca um conselho motivacional da API pública."""
+    try:
+        response = requests.get(
+            "https://api.adviceslip.com/advice", timeout=5
         )
-        self.label_titulo.pack(pady=10)
+        if response.status_code == 200:
+            return response.json()['slip']['advice']
+        return "Estude com foco e persistencia!"
+    except Exception:
+        return "Conexao com API falhou, mas nao pare de estudar!"
 
-        # Label do clima
-        self.label_clima = tk.Label(
-            root, text="🌤️ Carregando clima...",
-            font=("Arial", 10), fg="gray"
+
+def listar_tarefas():
+    """Lista todas as tarefas do Supabase."""
+    try:
+        r = requests.get(
+            f"{SUPABASE_URL}/rest/v1/tarefas?select=*&order=id.asc",
+            headers=HEADERS,
+            timeout=10,
         )
-        self.label_clima.pack(pady=2)
-        self.root.after(100, self.atualizar_clima)
-
-        self.entry_materia = tk.Entry(root, width=30)
-        self.entry_materia.insert(0, "Digite a matéria...")
-        self.entry_materia.pack(pady=5)
-
-        self.btn_adicionar = tk.Button(
-            root, text="Adicionar Tarefa",
-            command=self.adicionar_tarefa
-        )
-        self.btn_adicionar.pack(pady=5)
-
-        self.lista_tarefas = tk.Listbox(root, width=50, height=10)
-        self.lista_tarefas.pack(pady=10)
-
-    def atualizar_clima(self):
-        msg = mensagem_clima()
-        self.label_clima.config(text=msg, fg="blue")
-
-    def adicionar_tarefa(self):
-        materia = self.entry_materia.get()
-        if materia and materia != "Digite a matéria...":
-            self.lista_tarefas.insert(tk.END, f"📚 {materia}")
-            self.entry_materia.delete(0, tk.END)
-        else:
-            messagebox.showwarning(
-                "Atenção", "Por favor, digite o nome de uma matéria."
-            )
+        if r.status_code == 200:
+            return r.json()
+        return []
+    except Exception:
+        return []
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = OrganizadorEstudos(root)
-    root.mainloop()
+def adicionar_tarefa(materia, horas, status="Pendente"):
+    """Insere uma nova tarefa no Supabase."""
+    payload = {"materia": materia, "horas": horas, "status": status}
+    requests.post(
+        f"{SUPABASE_URL}/rest/v1/tarefas",
+        headers={**HEADERS, "Prefer": "return=minimal"},
+        json=payload,
+        timeout=10,
+    )
+
+
+def excluir_tarefa(tarefa_id):
+    """Remove uma tarefa pelo ID no Supabase."""
+    requests.delete(
+        f"{SUPABASE_URL}/rest/v1/tarefas?id=eq.{tarefa_id}",
+        headers=HEADERS,
+        timeout=10,
+    )
+
+
+def concluir_tarefa(tarefa_id):
+    """Marca uma tarefa como concluida no Supabase."""
+    requests.patch(
+        f"{SUPABASE_URL}/rest/v1/tarefas?id=eq.{tarefa_id}",
+        headers={**HEADERS, "Prefer": "return=minimal"},
+        json={"status": "Concluido"},
+        timeout=10,
+    )
+
+
+# --- Interface ---
+st.set_page_config(page_title="Gestor de Estudos Pro v3.0", layout="centered")
+
+st.title("Gestor de Estudos Academicos")
+st.subheader("Sua dose diaria de motivacao:")
+st.info(buscar_conselho())
+
+with st.form("nova_materia"):
+    col1, col2 = st.columns([3, 1])
+    materia = col1.text_input("Nome da Materia")
+    horas = col2.text_input("Horas")
+    submit = st.form_submit_button("Adicionar a Rotina")
+
+if submit and materia and horas:
+    adicionar_tarefa(materia, horas)
+    st.success(f"{materia} adicionada!")
+    st.rerun()
+
+st.write("---")
+tarefas = listar_tarefas()
+
+if not tarefas:
+    st.info("Nenhuma materia cadastrada ainda.")
+
+for t in tarefas:
+    col_id, col_mat, col_hr, col_st, col_ok, col_del = st.columns(
+        [1, 4, 2, 3, 2, 2]
+    )
+    col_id.write(f"#{t['id']}")
+    col_mat.write(t['materia'])
+    col_hr.write(f"{t['horas']}h")
+    col_st.write(t['status'])
+    if col_ok.button("Concluir", key=f"ok_{t['id']}"):
+        concluir_tarefa(t['id'])
+        st.rerun()
+    if col_del.button("Excluir", key=f"del_{t['id']}"):
+        excluir_tarefa(t['id'])
+        st.rerun()
